@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 #include <cstdint>
 #include <cstdio>
 
@@ -26,10 +25,9 @@
 #define QL_MAGIC_TENTH_SHORT 0x00000333
 #define QL_MAGIC_TENTH_LONG  0x33333333
 
-
 namespace QuickLog {
-template<typename T>
 
+template<typename T>
 /**
  * @brief Print an @par val as a null-ternimated string to @par buf in decimal
  * This is a fallback itoa implementation using sprintf
@@ -60,4 +58,3 @@ int32_t itoa<int32_t>(int32_t val, char *buf);
 template<>
 int32_t itoa<uint32_t>(uint32_t val, char *buf);
 }
-

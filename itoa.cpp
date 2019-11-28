@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "itoa.h"
 
 using namespace QuickLog;
@@ -23,7 +24,7 @@ int32_t itoa_short(uint32_t val, char *buf) {
         return 1;
     }
 
-    uint32_t num = val;
+    uint32_t num   = val;
     uint32_t pow10 = 1;
     uint32_t dig;
     uint32_t len   = 0;
