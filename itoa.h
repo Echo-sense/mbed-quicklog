@@ -16,59 +16,48 @@
 
 
 #include <cstdint>
+#include <cstdio>
 
 #ifndef ECHOSENSE_FIRMWARE_ITOA_H
 #define ECHOSENSE_FIRMWARE_ITOA_H
 
 #endif //ECHOSENSE_FIRMWARE_ITOA_H
 
-#define QL_MAGIC_INT8 0x0333
+#define QL_MAGIC_TENTH_SHORT 0x00000333
+#define QL_MAGIC_TENTH_LONG  0x33333333
 
-char *QL_itoa_uint8(uint8_t val, char *buf) {
-    uint64_t x;
-    uint32_t num   = val;
-    uint32_t pow10 = 1;
-    uint32_t dig;
-    char     *end;
 
-    while (pow10 <= num) {
-        pow10 *= 10;
-        buf++;
-    } // establish the length of the number
+namespace QuickLog {
+template<typename T>
 
-    end = buf + 1;
+/**
+ * @brief Print an @par val as a null-ternimated string to @par buf in decimal
+ * This is a fallback itoa implementation using sprintf
+ * Sprintf is slow, so hopefully this is not used much
+ *
+ * @tparam T type of input value
+ * @param val value to print
+ * @param buf buffer to print to
+ * @return number of characters that would have been written for sufficiently large buffer.
+ */
+int32_t itoa(T val, char *buf);
 
-    // loop backwards through the number printing the result
-    do {
-        // divide num by 10
-        num++;
-        num *= QL_MAGIC_INT8;
-        dig = num >> 9;
+template<>
+int32_t itoa<int8_t>(int8_t val, char *buf);
 
-        // store remainder in dig
-        dig &= 0x1F;
-        dig *= 10;
-        dig >>= 4;
-        if (dig >= 10) {
-            dig -= 10;
-        } // dig %= 10
+template<>
+int32_t itoa<uint8_t>(uint8_t val, char *buf);
 
-        // print digit
-        *buf-- = '0' + dig;
+template<>
+int32_t itoa<int16_t>(int16_t val, char *buf);
 
-        // store quotient back in num
-        num >>= 13;
-    } while (num > 0);
+template<>
+int32_t itoa<uint16_t>(uint16_t val, char *buf);
 
-    return end;
+template<>
+int32_t itoa<int32_t>(int32_t val, char *buf);
+
+template<>
+int32_t itoa<uint32_t>(uint32_t val, char *buf);
 }
-
-char *QL_itoa_int8(int8_t val, char *buf) {
-    if (val < 0) {
-        *(buf++) = '-';
-        val = -val;
-    }
-    return QL_itoa_uint8(val, buf);
-}
-
 
